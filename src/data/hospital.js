@@ -49,6 +49,8 @@ export const fallbackHospitalImage = `data:image/svg+xml;utf8,${encodeURICompone
   </svg>
 `)}`;
 
+const illustrativeHospitalImage = 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80';
+
 const sampleHospitals = [
   {
     id: 'lagos-general-hospital',
@@ -299,11 +301,11 @@ export const hospitals = sampleHospitals.map((hospital) => ({
   collectedAt: null,
   coordinatesSource: null,
   image: {
-    url: hospital.image,
-    source: null,
-    attribution: null,
-    license: null,
-    status: hospital.image ? 'unverified' : 'unavailable',
+    url: hospital.image || illustrativeHospitalImage,
+    source: hospital.image ? null : 'Unsplash',
+    attribution: hospital.image ? null : 'Illustrative stock photo · Unsplash · not this facility',
+    license: hospital.image ? null : 'Unsplash License',
+    status: hospital.image ? 'unverified' : 'illustrative',
   },
   verification: {
     status: 'sample',

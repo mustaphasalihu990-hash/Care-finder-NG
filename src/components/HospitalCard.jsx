@@ -13,7 +13,8 @@ export default function HospitalCard({ hospital, isFavorite, onToggleFavorite })
   return (
     <article className="hospital-card">
       <div className="card-image-wrap">
-        <img src={imageUrl || fallbackHospitalImage} alt={imageUrl ? hospital.name : 'Illustration, not a photo of this facility'} className="card-image" onError={handleImageError} />
+        <img src={imageUrl || fallbackHospitalImage} alt={hospital.image?.status === 'illustrative' ? 'Illustrative hospital stock photo, not this facility' : imageUrl ? hospital.name : 'Illustration, not a photo of this facility'} className="card-image" onError={handleImageError} />
+        {hospital.image?.status === 'illustrative' && <span className="image-unavailable">Illustrative photo · not this facility</span>}
         {!imageUrl && <span className="image-unavailable">Illustration · no facility photo available</span>}
         <button
           type="button"

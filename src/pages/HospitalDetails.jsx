@@ -42,6 +42,9 @@ export default function HospitalDetails() {
   }
 
   const isSaved = favorites.includes(hospital.id);
+  const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+    `${hospital.name}, ${hospital.city}, ${hospital.state}, Nigeria`
+  )}`;
 
   const handleToggleFavorite = () => {
     setFavorites(toggleFavorite(hospital.id));
@@ -142,7 +145,8 @@ export default function HospitalDetails() {
         <div className="container detail-layout">
           <div className="detail-hero">
             <div className="detail-image-wrap">
-              <img src={imageUrl || fallbackHospitalImage} alt={imageUrl ? hospital.name : 'Illustration, not a photo of this facility'} className="detail-image" onError={handleImageError} />
+              <img src={imageUrl || fallbackHospitalImage} alt={hospital.image?.status === 'illustrative' ? 'Illustrative hospital stock photo, not this facility' : imageUrl ? hospital.name : 'Illustration, not a photo of this facility'} className="detail-image" onError={handleImageError} />
+              {hospital.image?.status === 'illustrative' && <span className="image-unavailable">Illustrative photo · not this facility</span>}
               {!imageUrl && <span className="image-unavailable">Illustration · no facility photo available</span>}
               {hospital.image?.attribution && <span className="image-attribution">{hospital.image.attribution}</span>}
             </div>
@@ -161,14 +165,20 @@ export default function HospitalDetails() {
               </div>
 
               <div className="detail-actions">
-                <button type="button" className="primary-btn" onClick={handleGetDirections} disabled={isRouting || !hospital.coordinates}>
-                  <Navigation size={16} /> {isRouting ? 'Finding route…' : 'Get directions'}
-                </button>
+                {hospital.coordinates ? (
+                  <button type="button" className="primary-btn" onClick={handleGetDirections} disabled={isRouting}>
+                    <Navigation size={16} /> {isRouting ? 'Finding route…' : 'Get directions'}
+                  </button>
+                ) : (
+                  <a className="primary-btn" href={mapsDirectionsUrl} target="_blank" rel="noreferrer">
+                    <Navigation size={16} /> Find directions
+                  </a>
+                )}
                 <button type="button" className={isSaved ? 'secondary-btn active' : 'secondary-btn'} onClick={handleToggleFavorite}>
                   <Heart size={16} /> {isSaved ? 'Saved' : 'Save to favourites'}
                 </button>
               </div>
-              {!hospital.coordinates && <p className="muted">Directions are unavailable until facility coordinates are sourced.</p>}
+              {!hospital.coordinates && <p className="muted">This sample record has no verified coordinates. Google Maps will search by facility name and city; confirm the destination before traveling.</p>}
             </div>
           </div>
 
@@ -228,15 +238,19 @@ export default function HospitalDetails() {
                   <strong>{hospital.coordinatesSource || 'Not available'}</strong>
                 </li>
                 <li>
-                  <span>Photograph source and licence</span>
-                  <strong>{hospital.image?.source ? `${hospital.image.source} · ${hospital.image.license || 'Licence not recorded'}` : 'No facility photograph sourced'}</strong>
+                  <span>Image source and licence</span>
+                  <strong>{hospital.image?.source ? `${hospital.image.source} · ${hospital.image.license || 'Licence not recorded'}${hospital.image.status === 'illustrative' ? ' · illustrative, not facility-specific' : ''}` : 'No facility photograph sourced'}</strong>
                 </li>
               </ul>
             </div>
 
             <div className="detail-block">
               <h2>Location and directions</h2>
-              <p className="muted route-disclaimer">Routes and travel times are estimates from the public OSRM demo service. They do not include live traffic and may not reflect local road conditions.</p>
+              <p className="muted route-disclaimer">
+                {hospital.coordinates
+                  ? 'Routes and travel times are estimates from the public OSRM demo service. They do not include live traffic and may not reflect local road conditions.'
+                  : 'This sample record has no verified map location. Confirm any Google Maps search result with the facility before traveling.'}
+              </p>
               {routeError && <p className="alert-banner route-error" role="alert">{routeError}</p>}
               {route && (
                 <p className="route-summary" role="status">

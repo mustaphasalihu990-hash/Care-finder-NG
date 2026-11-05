@@ -73,8 +73,9 @@ export default function About() {
             <h2>How it works</h2>
             <p>
               Users can search the local demonstration records by name, city, state, or service. Directions
-              require sourced facility coordinates and user permission for location access; the current sample
-              records do not have coordinates, so route requests are unavailable. Favourites remain on the device.
+              use a Google Maps place search for sample records without sourced coordinates; confirm the
+              destination before traveling. Records with sourced coordinates can request a route after location
+              permission is granted. Favourites remain on the device.
             </p>
           </div>
         </section>

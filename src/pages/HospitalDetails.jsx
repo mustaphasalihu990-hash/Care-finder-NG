@@ -145,8 +145,8 @@ export default function HospitalDetails() {
         <div className="container detail-layout">
           <div className="detail-hero">
             <div className="detail-image-wrap">
-              <img src={imageUrl || fallbackHospitalImage} alt={hospital.image?.status === 'illustrative' ? 'Illustrative hospital stock photo, not this facility' : imageUrl ? hospital.name : 'Illustration, not a photo of this facility'} className="detail-image" onError={handleImageError} />
-              {hospital.image?.status === 'illustrative' && <span className="image-unavailable">Illustrative photo · not this facility</span>}
+              <img src={imageUrl || fallbackHospitalImage} alt={hospital.image?.status === 'illustrative' ? `Custom illustration for ${hospital.name}` : imageUrl ? hospital.name : 'Hospital illustration'} className="detail-image" onError={handleImageError} />
+              {hospital.image?.status === 'illustrative' && <span className="image-unavailable">Custom illustration · not a facility photo</span>}
               {!imageUrl && <span className="image-unavailable">Illustration · no facility photo available</span>}
               {hospital.image?.attribution && <span className="image-attribution">{hospital.image.attribution}</span>}
             </div>
@@ -239,7 +239,7 @@ export default function HospitalDetails() {
                 </li>
                 <li>
                   <span>Image source and licence</span>
-                  <strong>{hospital.image?.source ? `${hospital.image.source} · ${hospital.image.license || 'Licence not recorded'}${hospital.image.status === 'illustrative' ? ' · illustrative, not facility-specific' : ''}` : 'No facility photograph sourced'}</strong>
+                  <strong>{hospital.image?.source ? `${hospital.image.source} · ${hospital.image.license || 'Licence not recorded'}${hospital.image.status === 'illustrative' ? ' · illustration, not a facility photograph' : ''}` : 'No facility photograph sourced'}</strong>
                 </li>
               </ul>
             </div>
